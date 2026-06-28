@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Integrasi Numerik</title>
+    
+    <!-- Google Font: Figtree -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Figtree', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f4f5ff',
+                            100: '#ebedff',
+                            200: '#dadcff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Math.js CDN untuk evaluasi fungsi matematika -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.js"></script>
+
+    <style>
+        body {
+            font-family: 'Figtree', sans-serif;
+        }
+        /* Scrollbar kustom */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-b from-violet-100 to-violet-300 text-slate-800 min-h-screen flex flex-col antialiased">
+
+    <!-- NAVBAR SECTION -->
+    <nav class="sticky top-0 z-50 bg-violet-800 backdrop-blur-md border-b border-slate-100 shadow-sm">
+        <div class="max-w-5xl mx-auto px-50 sm:px-5 lg:px-12">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-gradient-to-tr from-brand-600 to-indigo-500 text-white p-2.5 rounded-xl shadow-md shadow-brand-500/20">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-brand-600 to-indigo-600 bg-clip-text text-transparent">IntegrasiNumerik</span>
+                        <span class="text-xs block text-slate-400 font-medium">Kalkulator Integrasi</span>
+                    </div>
+                </div>
+
+                <!-- Kelompok Anggota -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400 mr-2">Anggota Kelompok 7 :</span>
+                    <div class="flex space-x-3">
+                        <div class="bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/60 flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-bold text-slate-700">Septiani Tri Wahyuni</span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-mono">2403010004</span>
+                        </div>
+                        <div class="bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200/60 flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-bold text-slate-700">Reza Muchtar Wahidin</span>
+                            <span class="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded font-mono">2403010030</span>
+                        </div>                        
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Button Icon -->
+                <div class="md:hidden relative group">
+                    <button class="bg-slate-100 p-2 rounded-lg text-slate-600 hover:bg-slate-200 transition">
+                        <i class="fa-solid fa-users"></i>
+                    </button>
+                    <!-- Dropdown mobile info -->
+                    <div class="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-slate-100 p-4 hidden group-hover:block hover:block transition-all">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Anggota Kelompok:</h4>
+                        <div class="space-y-2">
+                            <div class="p-2 bg-slate-50 rounded-lg">
+                                <p class="text-xs font-bold text-slate-800">1. Septiani Tri Wahyuni</p>
+                                <p class="text-[11px] text-emerald-600 font-mono">NIM: 2403010004</p>
+                            </div>
+                            <div class="p-2 bg-slate-50 rounded-lg">
+                                <p class="text-xs font-bold text-slate-800">2. Reza Muchtar Wahidin</p>
+                                <p class="text-[11px] text-emerald-600 font-mono">NIM: 2403010030</p>
+                            </div>
+                            <div class="border-t border-slate-100 pt-2 text-center text-[10px] text-slate-400 font-medium">
+                                Kelas TI A24
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="relative overflow-hidden bg-gradient-to-b from-violet-300 via-white to-violet-300 py-12 md:py-16 border-b border-slate-100">
+        <div class="absolute inset-0 z-0 opacity-30">
+            <svg class="w-full h-full" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+                <defs>
+                    <pattern id="gridw" width="40" height="40" patternUnits="userSpaceOnUse">
+                        <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#6366f1" stroke-width="0.5" />
+                    </pattern>
+                </defs>
+                <rect width="100%" height="100%" fill="url(#grid)" />
+            </svg>
+        </div>
+
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-3xl mx-auto">
+                <span class="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold bg-brand-100 text-brand-700 mb-4">
+                    <i class="fa-solid fa-graduation-cap mr-1.5"></i> Metode Numerik
+                </span>
+                <h1 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-950 tracking-tight leading-none mb-6">
+                    Kalkulator <br class="hidden sm:inline" />
+                    <span class="bg-gradient-to-r from-brand-600 via-indigo-600 to-violet-500 bg-clip-text text-transparent">Integrasi Numerik</span>
+                </h1>
+                <p class="text-sm sm:text-base text-slate-600 leading-relaxed mb-8">
+                    Sebuah platform visualisasi interaktif untuk menghitung luas daerah di bawah kurva fungsi matematika menggunakan tiga pendekatan numerik: 
+                    <span class="font-semibold text-slate-800">Kaidah Segi Empat</span>, 
+                    <span class="font-semibold text-slate-800">Kaidah Titik Tengah</span>, dan 
+                    <span class="font-semibold text-slate-800">Metode Pias Trapesium</span>.
+                </p>
+                
+                <div class="flex flex-wrap justify-center gap-3">
+                    <a href="#kalkulator-section" class="px-5 py-3 rounded-xl bg-violet-600 hover:bg-violet-800 text-white font-bold text-sm shadow-lg shadow-violet-500/25 transition flex items-center space-x-2">
+                        <span>Mulai Hitung Sekarang</span>
+                        <i class="fa-solid fa-calculator"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN INTERACTIVE SECTION (SINGLE COLUMN FLOW) -->
+    <main id="kalkulator-section" class="flex-grow py-12 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full space-y-8">
+        
+        <!-- ================= TAHAP 1: INPUT DATA ================= -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-2 h-full bg-brand-500"></div>
+            
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                <div class="flex items-center space-x-3">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-50 text-brand-600 font-bold text-sm border border-brand-100">1</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg">Tahap 1: Input Data</h3>
+                        <p class="text-xs text-slate-400 font-medium">Tentukan parameter fungsi dan batas integrasi</p>
+                    </div>
+                </div>
+                
+                <!-- Quick Contoh Dropdown -->
+                <div class="dropdown relative self-start sm:self-auto">
+                    <button id="preset-btn" onclick="togglePresets()" class="text-xs bg-violet-600 text-white font-bold text-sm shadow-lg px-3 py-2 rounded-xl border border-slate-200 hover:bg-violet-800 transition font-semibold flex items-center space-x-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles text-purple-900"></i>
+                        <span>Gunakan Contoh Preset</span>
+                        <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                    </button>
+                    <div id="preset-menu" class="hidden absolute right-0 mt-2 w-64 bg-white border border-slate-200 rounded-xl shadow-xl z-20 py-1.5 text-left">
+                        <button onclick="applyPreset('x^2', 0, 2, 4)" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition font-medium flex justify-between">
+                            <span>f(x) = x² n=4</span>
+                            <span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Parabola</span>
+                        </button>
+                        <button onclick="applyPreset('sin(x)', 0, 3.14159, 6)" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition font-medium flex justify-between">
+                            <span>f(x) = sin(x) [0, π] n=6</span>
+                            <span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Trigonometri</span>
+                        </button>
+                        <button onclick="applyPreset('exp(x)', 0, 1, 5)" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition font-medium flex justify-between">
+                            <span>f(x) = e^x n=5</span>
+                            <span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Eksponensial</span>
+                        </button>
+                        <button onclick="applyPreset('1 / (1 + x)', 0, 1, 10)" class="w-full text-left px-4 py-2.5 text-xs text-slate-700 hover:bg-brand-50 hover:text-brand-700 transition font-medium flex justify-between">
+                            <span>f(x) = 1/(1+x) n=10</span>
+                            <span class="text-[10px] text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded">Rasional</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Form Grid -->
+            <div class="space-y-5">
+                <!-- f(x) -->
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex justify-between items-center">
+                        <span>Fungsi Matematika f(x)</span>
+                        <span class="text-[10px] text-slate-400 font-normal normal-case">Gunakan variabel 'x' (contoh: x^2 + 2*x)</span>
+                    </label>
+                    <div class="relative rounded-xl shadow-sm">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 font-serif italic font-bold">
+                            f(x) =
+                        </div>
+                        <input type="text" id="input-fx" value="x^2" oninput="handleInputChange()"
+                            class="block w-full pl-16 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition font-mono text-sm text-slate-800 placeholder-slate-400 font-bold"
+                            placeholder="x^2 + 2*x">
+                    </div>
+                </div>
+
+                <!-- Grid Batas a & b -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Batas Integrasi Bawah (a)</label>
+                        <input type="number" id="input-a" value="0" step="any" oninput="handleInputChange()"
+                            class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition font-mono text-sm font-semibold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Batas Integrasi Atas (b)</label>
+                        <input type="number" id="input-b" value="2" step="any" oninput="handleInputChange()"
+                            class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition font-mono text-sm font-semibold">
+                    </div>
+                </div>
+
+                <!-- Jumlah Segmen (n) & Metode -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2 flex justify-between">
+                            <span>Jumlah Segmen / Pias (n)</span>
+                            <span id="n-val" class="font-mono text-brand-600 font-bold bg-brand-50 px-2 py-0.5 rounded">4</span>
+                        </label>
+                        <input type="range" id="input-n" min="2" max="50" value="4" oninput="updateRangeLabel(this.value); handleInputChange();"
+                            class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600 my-4">
+                        <div class="flex justify-between text-[10px] text-slate-400 font-mono">
+                            <span>Min: 2</span>
+                            <span>Max: 50</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Pilihan Fokus Visualisasi</label>
+                        <select id="input-metode" onchange="handleInputChange()"
+                            class="block w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition font-semibold text-sm text-slate-700">
+                            <option value="segi-empat">Kaidah Segi Empat (Left Riemann)</option>
+                            <option value="titik-tengah">Kaidah Titik Tengah (Midpoint)</option>
+                            <option value="trapesium" selected>Metode Pias Trapesium</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAHAP 2: VALIDASI INPUT & TRIGGER BUTTON ================= -->
+        <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-2 h-full bg-amber-500" id="validation-bar"></div>
+            
+            <div class="flex items-center space-x-3 mb-6">
+                <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-amber-50 text-amber-600 font-bold text-sm border border-amber-100">2</span>
+                <div>
+                    <h3 class="font-bold text-slate-900 text-lg">Tahap 2: Validasi Parameter</h3>
+                    <p class="text-xs text-slate-400 font-medium">Verifikasi kebenaran dan keselarasan parameter matematika sebelum dihitung</p>
+                </div>
+            </div>
+
+            <!-- Checklist Status Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                <!-- f(x) Validation -->
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-start space-x-3 text-xs transition" id="val-fx-row">
+                    <span class="text-emerald-500 text-base mt-0.5" id="val-fx-icon"><i class="fa-solid fa-circle-check"></i></span>
+                    <div>
+                        <p class="font-bold text-slate-800" id="val-fx-title">Sintaks Fungsi f(x)</p>
+                        <p class="text-slate-500 text-[10px] mt-0.5" id="val-fx-desc">Format fungsi valid.</p>
+                    </div>
+                </div>
+
+                <!-- Bounds Validation -->
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-start space-x-3 text-xs transition" id="val-bounds-row">
+                    <span class="text-emerald-500 text-base mt-0.5" id="val-bounds-icon"><i class="fa-solid fa-circle-check"></i></span>
+                    <div>
+                        <p class="font-bold text-slate-800" id="val-bounds-title">Batas Integrasi</p>
+                        <p class="text-slate-500 text-[10px] mt-0.5" id="val-bounds-desc">Batas bawah a < b terpenuhi.</p>
+                    </div>
+                </div>
+
+                <!-- Segments Validation -->
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex items-start space-x-3 text-xs transition" id="val-n-row">
+                    <span class="text-emerald-500 text-base mt-0.5" id="val-n-icon"><i class="fa-solid fa-circle-check"></i></span>
+                    <div>
+                        <p class="font-bold text-slate-800">Jumlah Segmen (n)</p>
+                        <p class="text-slate-500 text-[10px] mt-0.5">Nilai n > 0 dan aman.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error Alert -->
+            <div id="validation-alert" class="hidden p-4 bg-red-50 text-red-700 rounded-xl text-xs border border-red-100 flex items-start space-x-2.5 mb-6">
+                <i class="fa-solid fa-triangle-exclamation mt-0.5 text-base"></i>
+                <span id="validation-alert-text" class="font-semibold">Peringatan: Fungsi tidak terdefinisi!</span>
+            </div>
+
+            <!-- TOMBOL HITUNG UTAMA -->
+            <div class="flex flex-col items-center justify-center pt-2">
+                <button onclick="calculateAndReveal()" id="btn-main-calculate"
+                    class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-violet-600 to-violet-600 hover:from-violet-800 hover:to-violet-800 text-white font-extrabold text-sm sm:text-base rounded-2xl shadow-xl shadow-brand-500/20 hover:shadow-brand-500/30 transition-all duration-200 transform hover:-translate-y-0.5 flex items-center justify-center space-x-3">
+                    <i class="fa-solid fa-play"></i>
+                    <span>MULAI HITUNG INTEGRASI</span>
+                </button>
+                <p class="text-[10.5px] text-slate-400 mt-3 font-medium flex items-center">
+                    <i class="fa-solid fa-lock text-brand-500 mr-1.5"></i> Seluruh data akan dihitung secara real-time
+                </p>
+            </div>
+        </section>
+
+        <!-- ================= INITIAL STATE PLACEHOLDER ================= -->
+        <section id="results-placeholder" class="bg-slate-100/60 rounded-2xl border-2 border-dashed border-slate-300 py-16 text-center">
+            <div class="max-w-xs mx-auto space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-slate-200 flex items-center justify-center text-slate-400 mx-auto">
+                    <i class="fa-solid fa-square-poll-vertical text-xl"></i>
+                </div>
+                <h4 class="font-bold text-slate-700">Hasil Menunggu Perhitungan</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Silakan isi parameter di Tahap 1, pastikan validasi lolos di Tahap 2, kemudian klik tombol <strong class="text-slate-600">"Mulai Hitung Integrasi"</strong> di atas untuk memunculkan visualisasi dan analisis lengkap.
+                </p>
+            </div>
+        </section>
+
+        <!-- ================= AREA HASIL KALKULASI (TERSEMBUNYI DIAWAL) ================= -->
+        <div id="results-wrapper" class="hidden space-y-8 animate-[fadeIn_0.5s_ease-out]">
+            
+            <!-- VISUALISASI GRAFIK INTEGRASI -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8">
+                <div class="flex justify-between items-center mb-5">
+                    <h4 class="font-bold text-slate-800 text-sm tracking-wide uppercase flex items-center space-x-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-brand-500"></span>
+                        <span>Plot Visualisasi Grafik Pias Integrasi</span>
+                    </h4>
+                    <span class="text-xs font-mono bg-slate-100 text-slate-600 px-3 py-1 rounded-xl" id="visual-label">
+                        Kaidah Trapesium
+                    </span>
+                </div>
+
+                <!-- SVG Plot Canvas -->
+                <div class="bg-slate-900 rounded-2xl p-4 shadow-inner relative overflow-hidden">
+                    <div class="absolute top-4 right-4 flex space-x-1.5 z-10">
+                        <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                        <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                    </div>
+                    <div id="svg-container" class="w-full h-72 md:h-96">
+                        <!-- SVG disisipkan dinamis menggunakan JS -->
+                    </div>
+                </div>
+                
+                <div class="mt-4 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 gap-2">
+                    <span class="flex items-center">
+                        <i class="fa-solid fa-circle-info mr-1.5 text-brand-500"></i>
+                        <span>Sumbu X: Batas [a, b] dibagi menjadi <span id="visual-n-text" class="font-bold text-slate-600">4</span> pias</span>
+                    </span>
+                    <span>Sumbu Y: f(x) dengan skala adaptif</span>
+                </div>
+            </section>
+
+            <!-- ================= TAHAP 3: PERHITUNGAN NUMERIK ================= -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8 relative">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 font-bold text-sm border border-indigo-100">3</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg">Tahap 3: Perhitungan Numerik</h3>
+                        <p class="text-xs text-slate-400 font-medium">Langkah-langkah detail penentuan lebar langkah (h) dan titik node pias</p>
+                    </div>
+                </div>
+
+                <!-- Penjelasan Lebar Segmen h -->
+                <div class="p-5 bg-brand-50/60 rounded-2xl border border-brand-100/50 mb-6 grid grid-cols-1 md:grid-cols-2 gap-5 items-center">
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Lebar Langkah Interval / Lebar Pias (h)</p>
+                        <p class="text-3xl font-extrabold text-brand-700 font-mono mt-1" id="val-h-result">0.500000</p>
+                    </div>
+                    <div class="text-xs text-slate-600 bg-white p-4 rounded-xl border border-slate-100/80 font-mono space-y-1">
+                        <p class="font-bold text-slate-800">Rumus Lebar Pias:</p>
+                        <p class="text-slate-400">h = (b - a) / n</p>
+                        <p id="val-h-calc" class="text-brand-600 font-bold">h = (2 - 0) / 4 = 0.500000</p>
+                    </div>
+                </div>
+
+                <!-- Tabel Detail Evaluasi -->
+                <div class="space-y-3">
+                    <button onclick="toggleNodeTable()" class="w-full text-left flex justify-between items-center py-3.5 px-4 bg-slate-50 hover:bg-slate-100 rounded-xl text-xs font-bold text-slate-700 transition">
+                        <span class="flex items-center"><i class="fa-solid fa-list mr-2 text-brand-500"></i> Detail Langkah Evaluasi di Tiap Node Titik Pias</span>
+                        <i id="table-arrow" class="fa-solid fa-chevron-down text-[10px] transform transition-transform duration-200"></i>
+                    </button>
+                    
+                    <div id="node-table-container" class="hidden overflow-hidden border border-slate-100 rounded-xl transition-all">
+                        <div class="overflow-x-auto max-h-60">
+                            <table class="min-w-full divide-y divide-slate-100 text-xs">
+                                <thead class="bg-slate-50 font-bold text-slate-600 sticky top-0">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left">Pias (i)</th>
+                                        <th class="px-4 py-3 text-left">Titik Kiri (x<sub>i</sub>)</th>
+                                        <th class="px-4 py-3 text-left">Tinggi f(x<sub>i</sub>)</th>
+                                        <th class="px-4 py-3 text-left">Titik Tengah (x<sub>mid</sub>)</th>
+                                        <th class="px-4 py-3 text-left">Tinggi Tengah f(x<sub>mid</sub>)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="node-table-body" class="divide-y divide-slate-100 font-mono text-slate-700 bg-white">
+                                    <!-- Terisi oleh javascript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================= TAHAP 4: OUTPUT HASIL & ANALISIS ================= -->
+            <section class="bg-white rounded-2xl shadow-sm border border-slate-200/80 p-6 sm:p-8">
+                <div class="flex items-center space-x-3 mb-6">
+                    <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 font-bold text-sm border border-emerald-100">4</span>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg">Tahap 4: Output Hasil & Analisis Selisih</h3>
+                        <p class="text-xs text-slate-400 font-medium">Perbandingan nilai luas integrasi numerik terhadap referensi nilai eksak</p>
+                    </div>
+                </div>
+
+                <!-- Cards Hasil 3 Metode Sekaligus -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+                    <!-- Segi Empat -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/60 hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Kaidah Segi Empat (Kiri)</span>
+                            <h4 id="res-segiempat" class="text-2xl font-extrabold text-slate-800 font-mono">0.000000</h4>
+                        </div>
+                        <span class="inline-block mt-3 text-[10px] bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded-md font-medium self-start">Left Riemann Sum</span>
+                    </div>
+
+                    <!-- Titik Tengah -->
+                    <div class="bg-slate-50 rounded-2xl p-5 border border-slate-200/60 hover:shadow-md transition flex flex-col justify-between">
+                        <div>
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Kaidah Titik Tengah</span>
+                            <h4 id="res-midpoint" class="text-2xl font-extrabold text-slate-800 font-mono">0.000000</h4>
+                        </div>
+                        <span class="inline-block mt-3 text-[10px] bg-slate-200/80 text-slate-700 px-2 py-0.5 rounded-md font-medium self-start">Midpoint Rule</span>
+                    </div>
+
+                    <!-- Trapesium -->
+                    <div class="bg-brand-50 border border-brand-200 rounded-2xl p-5 hover:shadow-md transition flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-brand-600 text-[9px] text-white font-extrabold uppercase px-2.5 py-1 rounded-bl-lg">METODE UTAMA</div>
+                        <div>
+                            <span class="text-[10px] font-bold text-brand-400 uppercase tracking-wider block mb-1">Kaidah Trapesium</span>
+                            <h4 id="res-trapesium" class="text-2xl font-extrabold text-brand-800 font-mono">0.000000</h4>
+                        </div>
+                        <span class="inline-block mt-3 text-[10px] bg-brand-100 text-brand-700 px-2 py-0.5 rounded-md font-semibold self-start">Trapezoidal Rule</span>
+                    </div>
+                </div>
+
+                <!-- Tabel Komparasi Dan Selisih Persentase -->
+                <div class="overflow-x-auto border border-slate-100 rounded-xl mb-6">
+                    <table class="min-w-full divide-y divide-slate-100 text-xs">
+                        <thead class="bg-slate-50 font-bold text-slate-600">
+                            <tr>
+                                <th class="px-4 py-3.5 text-left">Metode Integrasi</th>
+                                <th class="px-4 py-3.5 text-right">Nilai Hasil (I)</th>
+                                <th class="px-4 py-3.5 text-right">Selisih Mutlak (vs Eksak*)</th>
+                                <th class="px-4 py-3.5 text-right">Galat Relatif (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 font-mono text-slate-700 bg-white">
+                            <tr>
+                                <td class="px-4 py-3.5 text-left font-sans font-semibold">Kaidah Segi Empat (Kiri)</td>
+                                <td class="px-4 py-3.5 text-right" id="table-segiempat-val">0.000000</td>
+                                <td class="px-4 py-3.5 text-right text-amber-600" id="table-segiempat-diff">0.000000</td>
+                                <td class="px-4 py-3.5 text-right" id="table-segiempat-error">0.00%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3.5 text-left font-sans font-semibold">Kaidah Titik Tengah</td>
+                                <td class="px-4 py-3.5 text-right" id="table-midpoint-val">0.000000</td>
+                                <td class="px-4 py-3.5 text-right text-emerald-600" id="table-midpoint-diff">0.000000</td>
+                                <td class="px-4 py-3.5 text-right" id="table-midpoint-error">0.00%</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3.5 text-left font-sans font-semibold">Kaidah Trapesium</td>
+                                <td class="px-4 py-3.5 text-right" id="table-trapesium-val">0.000000</td>
+                                <td class="px-4 py-3.5 text-right text-indigo-600" id="table-trapesium-diff">0.000000</td>
+                                <td class="px-4 py-3.5 text-right" id="table-trapesium-error">0.00%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Kotak Analisis Selisih & Kesimpulan -->
+                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                    <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-3 flex items-center">
+                        <i class="fa-solid fa-brain text-brand-600 mr-2 text-sm"></i>
+                        <span>Analisis Selisih & Komparasi Kinerja Akurasi</span>
+                    </h4>
+                    <div class="text-xs sm:text-sm text-slate-600 space-y-2 leading-relaxed" id="analysis-text-box">
+                        <!-- Terisi dinamis oleh JS -->
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-4 italic">
+                        *Catatan: Nilai Eksak Referensi diperoleh menggunakan integrasi numerik adaptif presisi tinggi (Simpson, n=1000) sebagai pembanding standar analisis teoretis.
+                    </p>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- EDUCATIONAL SECTION / CORNER FORMULA -->
+        <section id="teori-section" class="mt-16 border-t border-slate-200/80 pt-12">
+            <div class="max-w-3xl mx-auto">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-slate-900">Edukasi & Formula Integrasi Numerik</h2>
+                    <p class="text-sm text-slate-500 mt-1">Dasar matematika di balik penghitungan metode pias</p>
+                </div>
+
+                <div class="space-y-6 text-slate-700">
+                    
+                    <!-- Teori Umum -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-sm mb-2.5 flex items-center">
+                            <span class="w-1.5 h-4 bg-brand-500 rounded mr-2 inline-block"></span>
+                            Lebar Pias (h)
+                        </h3>
+                        <p class="text-xs leading-relaxed">
+                            Wilayah batas integrasi <code class="bg-slate-100 text-brand-600 px-1.5 py-0.5 rounded font-mono font-bold">[a, b]</code> dibagi menjadi sebanyak <code class="bg-slate-100 text-brand-600 px-1.5 py-0.5 rounded font-mono font-bold">n</code> segmen yang sama lebar dengan formula:
+                        </p>
+                        <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-center font-mono font-bold text-xs mt-3 text-slate-800">
+                            h = (b - a) / n
+                        </div>
+                    </div>
+
+                    <!-- Segi Empat -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-sm mb-2.5 flex items-center">
+                            <span class="w-1.5 h-4 bg-amber-500 rounded mr-2 inline-block"></span>
+                            1. Kaidah Segi Empat (Left Riemann Sum)
+                        </h3>
+                        <p class="text-xs leading-relaxed mb-3">
+                            Menganggap tinggi pias berdasarkan f(x) di ujung kiri batas pias:
+                        </p>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 font-mono text-xs text-slate-800 text-center font-bold">
+                            I ≈ h × [ f(x₀) + f(x₁) + ... + f(x<sub>n-1</sub>) ]
+                        </div>
+                    </div>
+
+                    <!-- Titik Tengah -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-sm mb-2.5 flex items-center">
+                            <span class="w-1.5 h-4 bg-emerald-500 rounded mr-2 inline-block"></span>
+                            2. Kaidah Titik Tengah (Midpoint Rule)
+                        </h3>
+                        <p class="text-xs leading-relaxed mb-3">
+                            Mengevaluasi nilai f(x) tepat di pertengahan tiap segmen interval untuk meminimalkan bias:
+                        </p>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 font-mono text-xs text-slate-800 text-center font-bold">
+                            I ≈ h × [ f(x<sub>0.5</sub>) + f(x<sub>1.5</sub>) + ... + f(x<sub>n-0.5</sub>) ]
+                        </div>
+                    </div>
+
+                    <!-- Trapesium -->
+                    <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm">
+                        <h3 class="font-bold text-slate-900 text-sm mb-2.5 flex items-center">
+                            <span class="w-1.5 h-4 bg-brand-600 rounded mr-2 inline-block"></span>
+                            3. Kaidah Trapesium (Trapezoidal Rule)
+                        </h3>
+                        <p class="text-xs leading-relaxed mb-3">
+                            Menghubungkan dua ujung pias dengan garis lurus sehingga pias berbentuk trapesium:
+                        </p>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 font-mono text-xs text-slate-800 text-center font-bold">
+                            I ≈ (h / 2) × [ f(x₀) + 2 f(x₁) + 2 f(x₂) + ... + 2 f(x<sub>n-1</sub>) + f(x<sub>n</sub>) ]
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-violet-800 text-slate-400 py-12 border-t border-slate-800 mt-20">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+            <div class="flex items-center justify-center space-x-2">
+                <div class="bg-brand-600 text-white p-2 rounded-lg">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <span class="font-extrabold text-white text-lg tracking-wider">IntegrasiNumerik</span>
+            </div>
+            <p class="text-grey-500 text-xs max-w-md mx-auto">
+                Web ini dikembangkan secara kolaboratif guna memenuhi tugas integrasi numerik dengan pendekatan visual interaktif.
+            </p>
+            <div class="border-t border-slate-800 pt-6 max-w-xl mx-auto">
+                <p class="text-xs font-semibold text-grey-500 uppercase tracking-wider">Tim Pengembang :</p>
+                <div class="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-3 font-semibold text-slate-300 text-xs">
+                    <span>1. Reza Muchtar Wahidin (NIM 2403010030)</span>
+                    <span class="hidden sm:inline text-slate-700">|</span>
+                    <span>2. Septiani Tri Wahyuni (NIM 2403010004)</span>
+                </div>
+            </div>
+            <p class="text-[10px] text-grey-600 pt-4">
+                © 2026 - Kalkulator Integrasi Numerik.
+            </p>
+        </div>
+    </footer>
+
+    <!-- LOGIKA JAVASCRIPT KALKULATOR INTEGRASI -->
+    <script>
+        // DOM Elements
+        const inputFx = document.getElementById('input-fx');
+        const inputA = document.getElementById('input-a');
+        const inputB = document.getElementById('input-b');
+        const inputN = document.getElementById('input-n');
+        const inputMetode = document.getElementById('input-metode');
+        
+        const labelN = document.getElementById('n-val');
+        const valHResult = document.getElementById('val-h-result');
+        const valHCalc = document.getElementById('val-h-calc');
+        const nodeTableBody = document.getElementById('node-table-body');
+        const nodeTableContainer = document.getElementById('node-table-container');
+        const tableArrow = document.getElementById('table-arrow');
+        
+        // Validation DOM Elements
+        const valFxRow = document.getElementById('val-fx-row');
+        const valFxIcon = document.getElementById('val-fx-icon');
+        const valFxTitle = document.getElementById('val-fx-title');
+        const valFxDesc = document.getElementById('val-fx-desc');
+        
+        const valBoundsRow = document.getElementById('val-bounds-row');
+        const valBoundsIcon = document.getElementById('val-bounds-icon');
+        const valBoundsTitle = document.getElementById('val-bounds-title');
+        const valBoundsDesc = document.getElementById('val-bounds-desc');
+        
+        const valNRow = document.getElementById('val-n-row');
+        const validationBar = document.getElementById('validation-bar');
+        const validationAlert = document.getElementById('validation-alert');
+        const validationAlertText = document.getElementById('validation-alert-text');
+
+        // Results DOM Elements
+        const resSegiEmpat = document.getElementById('res-segiempat');
+        const resMidpoint = document.getElementById('res-midpoint');
+        const resTrapesium = document.getElementById('res-trapesium');
+
+        const tableSegiempatVal = document.getElementById('table-segiempat-val');
+        const tableSegiempatDiff = document.getElementById('table-segiempat-diff');
+        const tableSegiempatError = document.getElementById('table-segiempat-error');
+        
+        const tableMidpointVal = document.getElementById('table-midpoint-val');
+        const tableMidpointDiff = document.getElementById('table-midpoint-diff');
+        const tableMidpointError = document.getElementById('table-midpoint-error');
+
+        const tableTrapesiumVal = document.getElementById('table-trapesium-val');
+        const tableTrapesiumDiff = document.getElementById('table-trapesium-diff');
+        const tableTrapesiumError = document.getElementById('table-trapesium-error');
+        
+        const analysisTextBox = document.getElementById('analysis-text-box');
+        const visualLabel = document.getElementById('visual-label');
+        const visualNText = document.getElementById('visual-n-text');
+
+        // Wrapper Results & Placeholder
+        const resultsPlaceholder = document.getElementById('results-placeholder');
+        const resultsWrapper = document.getElementById('results-wrapper');
+
+        // Menandakan apakah tombol "Mulai Hitung" sudah diklik sekurangnya sekali
+        let hasCalculatedAtLeastOnce = false;
+
+        // Toggle dropdown preset contoh
+        function togglePresets() {
+            const menu = document.getElementById('preset-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Terapkan preset data uji
+        function applyPreset(fx, a, b, n) {
+            inputFx.value = fx;
+            inputA.value = a;
+            inputB.value = b;
+            inputN.value = n;
+            updateRangeLabel(n);
+            document.getElementById('preset-menu').classList.add('hidden');
+            handleInputChange();
+        }
+
+        // Update teks jumlah segmen realtime
+        function updateRangeLabel(val) {
+            labelN.innerText = val;
+            visualNText.innerText = val;
+        }
+
+        // Tampilkan/sembunyikan tabel node perhitungan detail
+        function toggleNodeTable() {
+            nodeTableContainer.classList.toggle('hidden');
+            tableArrow.classList.toggle('rotate-180');
+        }
+
+        // Fungsi evaluasi matematika aman dengan parser MathJS
+        function parseAndEvaluate(funcStr, xValue) {
+            try {
+                const compiled = math.compile(funcStr);
+                const scope = { x: xValue };
+                return compiled.evaluate(scope);
+            } catch (error) {
+                return NaN;
+            }
+        }
+
+        // Menghitung referensi eksak (dengan Simpson adaptif 1000 iterasi)
+        function calculateExactReference(funcStr, a, b) {
+            const N = 1000;
+            const h = (b - a) / N;
+            let sum1 = 0;
+            let sum2 = 0;
+            
+            for (let i = 1; i < N; i++) {
+                const x = a + i * h;
+                if (i % 2 === 0) {
+                    sum2 += parseAndEvaluate(funcStr, x);
+                } else {
+                    sum1 += parseAndEvaluate(funcStr, x);
+                }
+            }
+            
+            const fa = parseAndEvaluate(funcStr, a);
+            const fb = parseAndEvaluate(funcStr, b);
+            
+            return (h / 3) * (fa + 4 * sum1 + 2 * sum2 + fb);
+        }
+
+        // Jalankan validasi input secara pasif setiap input berubah
+        function handleInputChange() {
+            validateInputsPassively();
+            
+            // Jika user pernah menekan "Mulai Hitung" sebelumnya, perbarui hasil secara otomatis (reactive)
+            if (hasCalculatedAtLeastOnce) {
+                executeCalculation();
+            }
+        }
+
+        // Validasi input pasif tanpa menampilkan hasil pias
+        function validateInputsPassively() {
+            const fx = inputFx.value.trim();
+            const a = parseFloat(inputA.value);
+            const b = parseFloat(inputB.value);
+            
+            let fxValid = true;
+            let boundsValid = true;
+
+            // Tes parse fungsi matematika
+            try {
+                const testVal = parseAndEvaluate(fx, isNaN(a) ? 0 : a);
+                if (isNaN(testVal) || testVal === null) {
+                    fxValid = false;
+                }
+            } catch(e) {
+                fxValid = false;
+            }
+            if (fx === "") fxValid = false;
+
+            // Validasi f(x) visual
+            if (fxValid) {
+                valFxRow.className = "p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start space-x-3 text-xs text-emerald-700";
+                valFxIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+                valFxTitle.innerText = "Sintaks f(x) Valid";
+                valFxDesc.innerText = "Fungsi matematika berhasil diproses.";
+            } else {
+                valFxRow.className = "p-4 bg-red-50 rounded-xl border border-red-100 flex items-start space-x-3 text-xs text-red-700";
+                valFxIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-500"></i>';
+                valFxTitle.innerText = "Sintaks f(x) Error";
+                valFxDesc.innerText = "Periksa penulisan rumus (contoh: x^2 + 2*x).";
+            }
+
+            // Validasi Batas a < b
+            if (!isNaN(a) && !isNaN(b) && a < b) {
+                valBoundsRow.className = "p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start space-x-3 text-xs text-emerald-700";
+                valBoundsIcon.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500"></i>';
+                valBoundsTitle.innerText = "Batas Integrasi OK";
+                valBoundsDesc.innerText = `Batas: ${a} < ${b}.`;
+            } else {
+                valBoundsRow.className = "p-4 bg-red-50 rounded-xl border border-red-100 flex items-start space-x-3 text-xs text-red-700";
+                valBoundsIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-500"></i>';
+                valBoundsTitle.innerText = "Batas Integrasi Salah";
+                valBoundsDesc.innerText = "Batas (a) harus < batas (b).";
+                boundsValid = false;
+            }
+
+            const totalValid = fxValid && boundsValid;
+
+            // Update warning visual global bar
+            if (totalValid) {
+                validationBar.className = "absolute top-0 left-0 w-2 h-full bg-emerald-500";
+                validationAlert.classList.add('hidden');
+            } else {
+                validationBar.className = "absolute top-0 left-0 w-2 h-full bg-red-500";
+                validationAlert.classList.remove('hidden');
+                if (!fxValid) {
+                    validationAlertText.innerText = "Perbaiki ekspresi f(x). Pastikan operator penulisan matematika lengkap.";
+                } else if (!boundsValid) {
+                    validationAlertText.innerText = "Batas integrasi bawah (a) harus lebih kecil dibanding batas atas (b).";
+                }
+            }
+
+            return totalValid;
+        }
+
+        // Dipanggil saat tombol "Mulai Hitung" diklik
+        function calculateAndReveal() {
+            const isValid = validateInputsPassively();
+            
+            if (!isValid) {
+                // Beri efek shake/alert jika tidak valid
+                validationAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            hasCalculatedAtLeastOnce = true;
+            
+            // Sembunyikan placeholder, tampilkan area hasil
+            resultsPlaceholder.classList.add('hidden');
+            resultsWrapper.classList.remove('hidden');
+
+            // Jalankan kalkulasi
+            executeCalculation();
+
+            // Gulir layar dengan mulus langsung ke visualisasi hasil
+            resultsWrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Eksekusi kalkulasi utama
+        function executeCalculation() {
+            const fx = inputFx.value.trim();
+            const a = parseFloat(inputA.value);
+            const b = parseFloat(inputB.value);
+            const n = parseInt(inputN.value);
+            const focusMethod = inputMetode.value;
+
+            // Update Label visualisasi fokus
+            if (focusMethod === 'segi-empat') {
+                visualLabel.innerText = "Kaidah Segi Empat (Kiri)";
+            } else if (focusMethod === 'titik-tengah') {
+                visualLabel.innerText = "Kaidah Titik Tengah";
+            } else {
+                visualLabel.innerText = "Kaidah Trapesium";
+            }
+
+            // TAHAP 3: PERHITUNGAN NUMERIK
+            const h = (b - a) / n;
+            valHResult.innerText = h.toFixed(6);
+            valHCalc.innerText = `h = (${b} - ${a}) / ${n} = ${h.toFixed(6)}`;
+
+            // Kosongkan baris tabel node lama
+            nodeTableBody.innerHTML = '';
+
+            // Siapkan array data titik untuk menggambar visualisasi
+            let nodePoints = [];
+            
+            // Loop data untuk tabel & visualisasi
+            for (let i = 0; i <= n; i++) {
+                const x_curr = a + i * h;
+                const f_curr = parseAndEvaluate(fx, x_curr);
+                
+                let x_mid = "";
+                let f_mid_val = "";
+                let f_mid = NaN;
+
+                if (i < n) {
+                    const x_mid_val = a + (i + 0.5) * h;
+                    f_mid = parseAndEvaluate(fx, x_mid_val);
+                    x_mid = x_mid_val.toFixed(5);
+                    f_mid_val = f_mid.toFixed(5);
+                }
+
+                nodePoints.push({
+                    i: i,
+                    x: x_curr,
+                    y: f_curr,
+                    xMid: x_mid !== "" ? parseFloat(x_mid) : null,
+                    yMid: f_mid
+                });
+
+                // Tambahkan baris tabel node detail
+                const row = document.createElement('tr');
+                row.className = "hover:bg-slate-50 transition border-b border-slate-100/50";
+                row.innerHTML = `
+                    <td class="px-4 py-2.5 font-semibold text-slate-500">${i}</td>
+                    <td class="px-4 py-2.5">${x_curr.toFixed(5)}</td>
+                    <td class="px-4 py-2.5 font-bold text-brand-600">${isNaN(f_curr) ? 'N/A' : f_curr.toFixed(5)}</td>
+                    <td class="px-4 py-2.5 text-slate-500">${x_mid !== "" ? x_mid : '-'}</td>
+                    <td class="px-4 py-2.5 text-emerald-600 font-bold">${f_mid_val !== "" ? f_mid_val : '-'}</td>
+                `;
+                nodeTableBody.appendChild(row);
+            }
+
+            // Hitung nilai integrasi eksak pembanding
+            const exactValue = calculateExactReference(fx, a, b);
+
+            // A. Kaidah Segi Empat Kiri (Left Riemann)
+            let sumSegiEmpat = 0;
+            for (let i = 0; i < n; i++) {
+                sumSegiEmpat += nodePoints[i].y;
+            }
+            const integrationSegiEmpat = h * sumSegiEmpat;
+
+            // B. Kaidah Titik Tengah (Midpoint)
+            let sumMidpoint = 0;
+            for (let i = 0; i < n; i++) {
+                sumMidpoint += nodePoints[i].yMid;
+            }
+            const integrationMidpoint = h * sumMidpoint;
+
+            // C. Kaidah Trapesium (Trapezoid) - MEMPERBAIKI INDEX nodePoints.y MENJADI nodePoints[0].y
+            let sumTrapesium = 0.5 * (nodePoints[0].y + nodePoints[n].y);
+            for (let i = 1; i < n; i++) {
+                sumTrapesium += nodePoints[i].y;
+            }
+            const integrationTrapesium = h * sumTrapesium;
+
+            // TAHAP 4: OUTPUT HASIL & TAMPILKAN KE SCREEN
+            resSegiEmpat.innerText = integrationSegiEmpat.toFixed(6);
+            resMidpoint.innerText = integrationMidpoint.toFixed(6);
+            resTrapesium.innerText = integrationTrapesium.toFixed(6);
+
+            // Tampilkan rincian tabel
+            tableSegiempatVal.innerText = integrationSegiEmpat.toFixed(6);
+            const diffSegi = Math.abs(integrationSegiEmpat - exactValue);
+            tableSegiempatDiff.innerText = diffSegi.toFixed(6);
+            tableSegiempatError.innerText = (exactValue !== 0 ? (diffSegi / Math.abs(exactValue)) * 100 : diffSegi * 100).toFixed(4) + "%";
+
+            tableMidpointVal.innerText = integrationMidpoint.toFixed(6);
+            const diffMid = Math.abs(integrationMidpoint - exactValue);
+            tableMidpointDiff.innerText = diffMid.toFixed(6);
+            tableMidpointError.innerText = (exactValue !== 0 ? (diffMid / Math.abs(exactValue)) * 100 : diffMid * 100).toFixed(4) + "%";
+
+            tableTrapesiumVal.innerText = integrationTrapesium.toFixed(6);
+            const diffTrap = Math.abs(integrationTrapesium - exactValue);
+            tableTrapesiumDiff.innerText = diffTrap.toFixed(6);
+            tableTrapesiumError.innerText = (exactValue !== 0 ? (diffTrap / Math.abs(exactValue)) * 100 : diffTrap * 100).toFixed(4) + "%";
+
+            // Tulis Analisis Komparasi
+            writeAnalysisText(exactValue, integrationSegiEmpat, integrationMidpoint, integrationTrapesium, diffSegi, diffMid, diffTrap);
+
+            // Gambar SVG Visualisasi
+            renderSVGPlot(fx, a, b, n, nodePoints, focusMethod);
+        }
+
+        // Penulisan analisis otomatis cerdas
+        function writeAnalysisText(exact, segiEmpat, midpoint, trapesium, errSegi, errMid, errTrap) {
+            let bestMethod = "Trapesium";
+            let minErr = errTrap;
+            
+            if (errMid < minErr) {
+                bestMethod = "Titik Tengah";
+                minErr = errMid;
+            }
+            if (errSegi < minErr) {
+                bestMethod = "Segi Empat";
+                minErr = errSegi;
+            }
+
+            analysisTextBox.innerHTML = `
+                <p>
+                    Berdasarkan perhitungan integrasi numerik untuk fungsi yang dimasukkan pada interval yang ditentukan:
+                </p>
+                <ul class="list-disc pl-5 mt-2 space-y-1.5">
+                    <li>
+                        <strong>Kaidah Segi Empat Kiri</strong> menghasilkan nilai integrasi sebesar <span class="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200/50 font-bold">${segiEmpat.toFixed(6)}</span> dengan selisih mutlak terhadap eksak sebesar <span class="font-mono text-amber-600 font-semibold">${errSegi.toFixed(6)}</span>.
+                    </li>
+                    <li>
+                        <strong>Kaidah Titik Tengah (Midpoint)</strong> menghasilkan nilai integrasi sebesar <span class="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200/50 font-bold">${midpoint.toFixed(6)}</span> dengan selisih mutlak terhadap eksak sebesar <span class="font-mono text-emerald-600 font-semibold">${errMid.toFixed(6)}</span>.
+                    </li>
+                    <li>
+                        <strong>Kaidah Trapesium</strong> menghasilkan nilai integrasi sebesar <span class="font-mono bg-white px-1.5 py-0.5 rounded border border-slate-200/50 font-bold">${trapesium.toFixed(6)}</span> dengan selisih mutlak terhadap eksak sebesar <span class="font-mono text-indigo-600 font-semibold">${errTrap.toFixed(6)}</span>.
+                    </li>
+                </ul>
+                <p class="mt-3 text-slate-700">
+                    <span class="inline-block px-2 py-0.5 bg-indigo-100 text-indigo-800 rounded text-[10px] font-bold uppercase mr-1.5">Kesimpulan</span>
+                    Metode dengan galat terendah dalam uji coba parameter ini adalah <strong>Kaidah ${bestMethod}</strong> (galat selisih sebesar <span class="font-mono text-brand-600 font-bold">${minErr.toFixed(6)}</span>). 
+                    Kaidah Titik Tengah sering kali menghasilkan hasil yang mengejutkan lebih akurat dibanding Trapesium pada jenis kurva parabola karena perataan pias tengah yang saling menyeimbangkan margin kesalahan f(x).
+                </p>
+            `;
+        }
+
+        // Menggambar grafik pias visualisasi integrasi menggunakan SVG
+        function renderSVGPlot(fx, a, b, n, nodePoints, focusMethod) {
+            const container = document.getElementById('svg-container');
+            container.innerHTML = ''; // bersihkan kanvas
+
+            const width = container.clientWidth || 600;
+            const height = container.clientHeight || 350;
+            const padding = { top: 30, right: 30, bottom: 40, left: 50 };
+
+            // Ambil 100 sampel kurva kontinu f(x)
+            let curvePoints = [];
+            const step = (b - a) / 100;
+            let yMin = Infinity;
+            let yMax = -Infinity;
+
+            for (let i = 0; i <= 100; i++) {
+                const x = a + i * step;
+                const y = parseAndEvaluate(fx, x);
+                if (!isNaN(y) && isFinite(y)) {
+                    curvePoints.push({ x, y });
+                    if (y < yMin) yMin = y;
+                    if (y > yMax) yMax = y;
+                }
+            }
+
+            if (yMin === yMax) {
+                yMin -= 1;
+                yMax += 1;
+            }
+            const yRange = yMax - yMin;
+            yMin -= yRange * 0.15;
+            yMax += yRange * 0.15;
+
+            // Skala koordinat X dan Y ke Pixel SVG
+            const scaleX = (x) => padding.left + ((x - a) / (b - a)) * (width - padding.left - padding.right);
+            const scaleY = (y) => height - padding.bottom - ((y - yMin) / (yMax - yMin)) * (height - padding.top - padding.bottom);
+
+            let svgContent = `<svg width="100%" height="100%" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
+
+            // 1. Gambar Grid Latar Belakang
+            svgContent += `<g stroke="#2d3748" stroke-width="0.5" stroke-dasharray="3,3">`;
+            for (let i = 0; i <= 5; i++) {
+                const gridY = yMin + (i / 5) * (yMax - yMin);
+                const py = scaleY(gridY);
+                svgContent += `<line x1="${padding.left}" y1="${py}" x2="${width - padding.right}" y2="${py}" />`;
+            }
+            for (let i = 0; i <= n; i++) {
+                const gridX = a + (i / n) * (b - a);
+                const px = scaleX(gridX);
+                svgContent += `<line x1="${px}" y1="${padding.top}" x2="${px}" y2="${height - padding.bottom}" />`;
+            }
+            svgContent += `</g>`;
+
+            // 2. Gambar Sumbu X = 0 (Jika masuk range)
+            if (yMin <= 0 && yMax >= 0) {
+                const yZeroPx = scaleY(0);
+                svgContent += `<line x1="${padding.left}" y1="${yZeroPx}" x2="${width - padding.right}" y2="${yZeroPx}" stroke="#4a5568" stroke-width="1.5" />`;
+            }
+
+            // 3. Gambar Pias Integrasi sesuai Metode Fokus
+            svgContent += `<g opacity="0.45">`;
+            const h_val = (b - a) / n;
+            const zeroYPixel = scaleY(Math.max(yMin, Math.min(0, yMax)));
+
+            for (let i = 0; i < n; i++) {
+                const xi = nodePoints[i].x;
+                const xNext = nodePoints[i+1].x;
+                const px = scaleX(xi);
+                const pxNext = scaleX(xNext);
+
+                let pointsString = "";
+
+                if (focusMethod === 'segi-empat') {
+                    const py = scaleY(nodePoints[i].y);
+                    pointsString = `${px},${zeroYPixel} ${px},${py} ${pxNext},${py} ${pxNext},${zeroYPixel}`;
+                } 
+                else if (focusMethod === 'titik-tengah') {
+                    const pyMid = scaleY(nodePoints[i].yMid);
+                    pointsString = `${px},${zeroYPixel} ${px},${pyMid} ${pxNext},${pyMid} ${pxNext},${zeroYPixel}`;
+                } 
+                else {
+                    const py = scaleY(nodePoints[i].y);
+                    const pyNext = scaleY(nodePoints[i+1].y);
+                    pointsString = `${px},${zeroYPixel} ${px},${py} ${pxNext},${pyNext} ${pxNext},${zeroYPixel}`;
+                }
+
+                let fillColor = "rgba(99, 102, 241, 0.4)";
+                let strokeColor = "#6366f1";
+                if (focusMethod === 'segi-empat') {
+                    fillColor = "rgba(245, 158, 11, 0.4)";
+                    strokeColor = "#f59e0b";
+                } else if (focusMethod === 'titik-tengah') {
+                    fillColor = "rgba(16, 185, 129, 0.4)";
+                    strokeColor = "#10b981";
+                }
+
+                svgContent += `<polygon points="${pointsString}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.5" />`;
+            }
+            svgContent += `</g>`;
+
+            // 4. Gambar Garis Kurva Utama f(x) Kontinu
+            if (curvePoints.length > 1) {
+                let pathD = `M ${scaleX(curvePoints.x)} ${scaleY(curvePoints.y)}`;
+                for (let i = 1; i < curvePoints.length; i++) {
+                    pathD += ` L ${scaleX(curvePoints[i].x)} ${scaleY(curvePoints[i].y)}`;
+                }
+                svgContent += `<path d="${pathD}" fill="none" stroke="#f43f5e" stroke-width="3" stroke-linecap="round" />`;
+            }
+
+            // 5. Gambar Titik Bulat Evaluasi (Node Points)
+            for (let i = 0; i <= n; i++) {
+                const px = scaleX(nodePoints[i].x);
+                const py = scaleY(nodePoints[i].y);
+                svgContent += `<circle cx="${px}" cy="${py}" r="4.5" fill="#fff" stroke="#f43f5e" stroke-width="2.5" />`;
+                
+                if (n <= 10) {
+                    svgContent += `<text x="${px}" y="${height - 20}" fill="#94a3b8" font-size="9" text-anchor="middle" font-family="monospace">x${i}</text>`;
+                }
+            }
+
+            // 6. Gambar Label Axis Batas a & b
+            svgContent += `<text x="${scaleX(a)}" y="${height - 5}" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">a = ${a}</text>`;
+            svgContent += `<text x="${scaleX(b)}" y="${height - 5}" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">b = ${b}</text>`;
+
+            svgContent += `</svg>`;
+            container.innerHTML = svgContent;
+        }
+
+        // Jalankan verifikasi pasif saat pertama kali web dimuat
+        window.onload = function() {
+            validateInputsPassively();
+        };
+
+        // Mengatur ulang skala SVG jika layar di-resize
+        window.addEventListener('resize', function() {
+            if (hasCalculatedAtLeastOnce) {
+                executeCalculation();
+            }
+        });
+    </script>
+</body>
+</html>
